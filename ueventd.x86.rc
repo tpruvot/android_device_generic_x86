@@ -1,0 +1,9 @@
+/dev/rfkill               0660   bluetooth  bluetooth
+/dev/ttyS*                0660   system     radio
+/dev/ttyACM*              0660   system     radio
+/dev/ttyUSB*              0660   radio      radio
+/dev/video*               0660   system     camera
+
+# sysfs properties
+/sys/devices/platform/asus-nb-wmi/rfkill/rfkill*   state      0660  bluetooth   bluetooth
+/sys/class/rfkill/rfkill* state  0660       bluetooth    bluetooth

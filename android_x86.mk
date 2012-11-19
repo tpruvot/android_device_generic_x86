@@ -14,12 +14,20 @@
 # limitations under the License.
 #
 
-# This file is executed by build/envsetup.sh, and can use anything
-# defined in envsetup.sh.
-#
-# In particular, you can add lunch options with the add_lunch_combo
-# function: add_lunch_combo generic-eng
+# This is a generic product that isn't specialized for a specific device.
+# It includes the base Android-x86 platform.
 
-add_lunch_combo android_x86-eng
-add_lunch_combo android_x86-userdebug
-add_lunch_combo android_x86-user
+$(call inherit-product,$(SRC_TARGET_DIR)/product/full_base.mk)
+$(call inherit-product,$(SRC_TARGET_DIR)/product/telephony.mk)
+
+$(call inherit-product,$(LOCAL_PATH)/device.mk)
+$(call inherit-product,$(LOCAL_PATH)/packages.mk)
+
+# Overrides
+PRODUCT_NAME := android_x86
+PRODUCT_BRAND := Android-x86
+PRODUCT_DEVICE := x86
+PRODUCT_MODEL := Generic Android-x86
+
+#GENERIC_X86_CONFIG_MK := $(GENERIC_X86_DIR)/BoardConfig.mk
+#GENERIC_X86_ANDROID_MK := $(GENERIC_X86_DIR)/AndroidBoard.mk

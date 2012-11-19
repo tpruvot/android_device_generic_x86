@@ -1,4 +1,3 @@
-#
 # Copyright (C) 2012 The Android-x86 Open Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,14 +11,24 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
-# This file is executed by build/envsetup.sh, and can use anything
-# defined in envsetup.sh.
-#
-# In particular, you can add lunch options with the add_lunch_combo
-# function: add_lunch_combo generic-eng
+# Basic Parameters
+touch.deviceType = touchScreen
+#touch.orientationAware = 1
 
-add_lunch_combo android_x86-eng
-add_lunch_combo android_x86-userdebug
-add_lunch_combo android_x86-user
+# Touch Size
+touch.touchSize.calibration = default
+
+# Tool Size
+touch.toolSize.calibration = default
+
+# Pressure
+touch.pressure.calibration = disable
+
+# Size
+touch.size.calibration = default
+
+# Orientation
+touch.orientation.calibration = none
+
+device.internal = 1

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 /**
- * Copyright (c) 2009, The Android Open Source Project
+ * Copyright (c) 2012, The Android-x86 Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -17,6 +17,6 @@
  */
 -->
 <resources>
-    <!-- lockscreen may not work in PDK env -->
-    <bool name="def_lockscreen_disabled">true</bool>
+    <bool name="def_lockscreen_disabled">false</bool>
+    <integer name="def_screen_off_timeout">1800000</integer>
 </resources>

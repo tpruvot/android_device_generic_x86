@@ -1,0 +1,90 @@
+#
+# Copyright (C) 2012-2013 The Android-x86 Open Source Project
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+PRODUCT_DIR := $(dir $(lastword $(filter-out device/common/%,$(filter device/%,$(ALL_PRODUCTS)))))
+
+PRODUCT_PROPERTY_OVERRIDES := \
+    ro.ril.hsxpa=1 \
+    ro.ril.gprsclass=10 \
+    keyguard.no_require_sim=true \
+    ro.com.android.dataroaming=true
+
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES := \
+    ro.arch=x86 \
+
+PRODUCT_COPY_FILES := \
+    $(if $(wildcard $(PRODUCT_DIR)init.rc),$(PRODUCT_DIR),$(LOCAL_PATH)/)init.rc:root/init.rc \
+    $(if $(wildcard $(PRODUCT_DIR)init.sh),$(PRODUCT_DIR),$(LOCAL_PATH)/)init.sh:system/etc/init.sh \
+    $(if $(wildcard $(PRODUCT_DIR)init.x86.rc),$(PRODUCT_DIR),$(LOCAL_PATH)/)init.x86.rc:root/init.x86.rc \
+    $(if $(wildcard $(PRODUCT_DIR)init.$(TARGET_PRODUCT).rc),$(PRODUCT_DIR)init.$(TARGET_PRODUCT).rc:root/init.$(TARGET_PRODUCT).rc) \
+    $(if $(wildcard $(PRODUCT_DIR)wpa_supplicant.conf),$(PRODUCT_DIR),$(LOCAL_PATH)/)wpa_supplicant.conf:system/etc/wifi/wpa_supplicant.conf \
+    $(if $(wildcard $(PRODUCT_DIR)excluded-input-devices.xml),$(PRODUCT_DIR),$(LOCAL_PATH)/)excluded-input-devices.xml:system/etc/excluded-input-devices.xml \
+    $(if $(wildcard $(PRODUCT_DIR)ueventd.$(TARGET_PRODUCT).rc),$(PRODUCT_DIR)ueventd.$(TARGET_PRODUCT).rc,$(LOCAL_PATH)/ueventd.x86.rc):root/ueventd.$(TARGET_PRODUCT).rc \
+
+PRODUCT_COPY_FILES += \
+    device/sample/etc/apns-full-conf.xml:system/etc/apns-conf.xml \
+    development/tools/emulator/system/camera/media_codecs.xml:system/etc/media_codecs.xml \
+    development/tools/emulator/system/camera/media_profiles.xml:system/etc/media_profiles.xml \
+    frameworks/native/data/etc/tablet_core_hardware.xml:system/etc/permissions/tablet_core_hardware.xml \
+    frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
+    frameworks/native/data/etc/android.hardware.camera.front.xml:system/etc/permissions/android.hardware.camera.front.xml \
+    frameworks/native/data/etc/android.hardware.location.gps.xml:system/etc/permissions/android.hardware.location.gps.xml \
+    frameworks/native/data/etc/android.hardware.wifi.xml:system/etc/permissions/android.hardware.wifi.xml \
+    frameworks/native/data/etc/android.hardware.sensor.proximity.xml:system/etc/permissions/android.hardware.sensor.proximity.xml \
+    frameworks/native/data/etc/android.hardware.sensor.light.xml:system/etc/permissions/android.hardware.sensor.light.xml \
+    frameworks/native/data/etc/android.hardware.sensor.gyroscope.xml:system/etc/permissions/android.hardware.sensor.gyroscope.xml \
+    frameworks/native/data/etc/android.hardware.sensor.barometer.xml:system/etc/permissions/android.hardware.sensor.barometer.xml \
+    frameworks/native/data/etc/android.hardware.sensor.accelerometer.xml:system/etc/permissions/android.hardware.sensor.accelerometer.xml \
+    frameworks/native/data/etc/android.hardware.touchscreen.multitouch.distinct.xml:system/etc/permissions/android.hardware.touchscreen.multitouch.distinct.xml \
+    frameworks/native/data/etc/android.hardware.touchscreen.multitouch.jazzhand.xml:system/etc/permissions/android.hardware.touchscreen.multitouch.jazzhand.xml \
+    frameworks/native/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
+    frameworks/native/data/etc/android.software.sip.xml:system/etc/permissions/android.software.sip.xml \
+    frameworks/native/data/etc/android.hardware.usb.accessory.xml:system/etc/permissions/android.hardware.usb.accessory.xml \
+    frameworks/native/data/etc/android.hardware.usb.host.xml:system/etc/permissions/android.hardware.usb.host.xml \
+    $(foreach f,$(wildcard $(LOCAL_PATH)/idc/*.idc),$(f):$(subst $(LOCAL_PATH),system/usr,$(f)))
+
+PRODUCT_TAGS += dalvik.gc.type-precise
+
+PRODUCT_CHARACTERISTICS := tablet,nosdcard
+
+PRODUCT_AAPT_CONFIG := normal mdpi hdpi
+PRODUCT_AAPT_PREF_CONFIG := mdpi
+
+DEVICE_PACKAGE_OVERLAYS := $(LOCAL_PATH)/overlay
+
+# Get the firmwares
+$(call inherit-product,$(LOCAL_PATH)/firmware.mk)
+
+# Get the touchscreen calibration tool
+$(call inherit-product-if-exists,external/tslib/tslib.mk)
+
+# Get the alsa files
+$(call inherit-product-if-exists,hardware/libaudio/alsa.mk)
+
+# Get GPS configuration
+$(call inherit-product-if-exists,device/common/gps/gps_as.mk)
+
+# Get the hardware acceleration libraries
+$(call inherit-product-if-exists,$(LOCAL_PATH)/gpu/gpu_mesa.mk)
+
+# Get tablet dalvik parameters
+$(call inherit-product,frameworks/native/build/tablet-7in-hdpi-1024-dalvik-heap.mk)
+
+# Get GMS
+$(call inherit-product-if-exists,vendor/google/products/gms.mk)
+
+# Get Arm translator
+$(call inherit-product-if-exists,vendor/intel/libhoudini.mk)

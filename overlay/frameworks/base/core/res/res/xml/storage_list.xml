@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 **
-** Copyright 2012, The Android Open Source Project
+** Copyright 2012, The Android-x86 Open Source Project
 **
 ** Licensed under the Apache License, Version 2.0 (the "License")
 ** you may not use this file except in compliance with the License.
@@ -41,4 +41,21 @@
             android:primary="true"
             android:emulated="true"
             android:mtpReserve="100" />
+    <!-- external USB storage -->
+    <storage android:mountPoint="/mnt/USB0"
+            android:storageDescription="@string/storage_usb"
+            android:primary="false"
+            android:removable="true" />
+    <storage android:mountPoint="/mnt/USB1"
+            android:storageDescription="@string/storage_usb"
+            android:primary="false"
+            android:removable="true" />
+    <storage android:mountPoint="/mnt/USB2"
+            android:storageDescription="@string/storage_usb"
+            android:primary="false"
+            android:removable="true" />
+    <storage android:mountPoint="/mnt/USB3"
+            android:storageDescription="@string/storage_usb"
+            android:primary="false"
+            android:removable="true" />
 </StorageList>
