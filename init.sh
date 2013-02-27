@@ -17,22 +17,38 @@ function init_misc()
 
 function init_hal_audio()
 {
-	alsa_ctl init
-	alsa_amixer set Master on
-	alsa_amixer set Master 100
-	alsa_amixer set Headphone on
-	alsa_amixer set Headphone 100
-	alsa_amixer set Speaker 100
-	alsa_amixer set Capture 100
-	alsa_amixer set Capture cap
-	alsa_amixer set PCM 100 unmute
-	alsa_amixer set 'Mic Boost' 2
+	case "$PRODUCT" in
+		VirtualBox*|QEMU*)
+			[ -d /proc/asound/card0 ] || modprobe snd-sb16 isapnp=0 irq=5
+			;;
+		*)
+			;;
+	esac
+	[ -d /proc/asound/card0 ] || modprobe snd-dummy
+
+	for c in $(grep '\[.*\]' /proc/asound/cards | awk '{print $1}'); do
+		alsa_ctl init $c
+		alsa_amixer -c $c set Master on
+		alsa_amixer -c $c set Master 100
+		alsa_amixer -c $c set Headphone on
+		alsa_amixer -c $c set Headphone 100
+		alsa_amixer -c $c set Speaker 100
+		alsa_amixer -c $c set Capture 100
+		alsa_amixer -c $c set Capture cap
+		alsa_amixer -c $c set PCM 100 unmute
+		alsa_amixer -c $c set 'Mic Boost' 2
+	done
 }
 
 function init_hal_bluetooth()
 {
 	# TODO
 	return
+}
+
+function init_hal_camera()
+{
+	[ -c /dev/video0 ] || modprobe vivi
 }
 
 function init_hal_gps()
@@ -87,49 +103,57 @@ function init_hal_hwcomposer()
 
 function init_hal_lights()
 {
-	# change brightness file permission for liblights
-	brfile=$(getprop backlight.brightness_file)
-	chown 1000.1000 ${brfile:-/sys/class/backlight/acpi_video0/brightness}
+	chown 1000.1000 /sys/class/backlight/*/brightness
 }
 
 function init_hal_power()
 {
 	# TODO
-	return
+	case "$PRODUCT" in
+		*)
+			;;
+	esac
 }
 
 function init_hal_sensors()
 {
-	case "$PRODUCT" in
+	case "$(cat $DMIPATH/uevent)" in
+		*ICONIA*W*)
+			set_hal_prop sensors w500
+			;;
+		*S10-3t*)
+			set_hal_prop sensors s103t
+			;;
+		*Inagua*)
+			#setkeycodes 0x62 29
+			#setkeycodes 0x74 56
+			set_hal_prop sensors kbd
+			set_hal_prop sensors.kbd.type 2
+			;;
+		*TEGA*|*Intel*)
+			set_hal_prop sensors kbd
+			set_hal_prop sensors.kbd.type 1
+			io_switch 0x0 0x1
+			setkeycodes 0x6d 125
+			;;
+		*MS-N0E1*)
+			;;
 		*)
+			set_hal_prop sensors kbd
 			;;
 	esac
 }
 
-function init_touch()
+function init_ril()
 {
 	case "$PRODUCT" in
-		ET2002*)
-			BOARD_USES_TSLIB=true
-			TOUCH=
-			;;
-		ET1602*)
-			TOUCH=
-			;;
-		*Q550|Latitude*ST)
-			TOUCH=hid-ntrig
-			;;
-		T91|T101)
-			BOARD_USES_TSLIB=true
-			TOUCH=
+		TEGA*|Intel*)
+			setprop rild.libpath /system/lib/libreference-ril.so
+			setprop rild.libargs "-d /dev/ttyUSB2"
 			;;
 		*)
-			# use hid-multitouch by default
-			TOUCH=hid-multitouch
 			;;
 	esac
-
-	[ -n "$TOUCH" ] && modprobe $TOUCH
 }
 
 function do_init()
@@ -137,13 +161,14 @@ function do_init()
 	init_misc
 	init_hal_audio
 	init_hal_bluetooth
+	init_hal_camera
 	init_hal_gps
 	init_hal_gralloc
 	init_hal_hwcomposer
 	init_hal_lights
 	init_hal_power
 	init_hal_sensors
-	init_touch
+	init_ril
 	post_init
 }
 

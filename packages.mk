@@ -37,6 +37,7 @@ PRODUCT_PACKAGES := \
     VideoEditor \
     VisualizationWallpapers \
     VoiceDialer \
+    camera.default \
     chat \
     com.android.future.usb.accessory \
     drmserver \
@@ -44,6 +45,7 @@ PRODUCT_PACKAGES := \
     gps.default \
     hwcomposer.x86 \
     icu.dat \
+    io_switch \
     libdrmframework_jni \
     lights.default \
     make_ext4fs \

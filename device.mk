@@ -29,18 +29,23 @@ PRODUCT_COPY_FILES := \
     $(if $(wildcard $(PRODUCT_DIR)init.rc),$(PRODUCT_DIR),$(LOCAL_PATH)/)init.rc:root/init.rc \
     $(if $(wildcard $(PRODUCT_DIR)init.sh),$(PRODUCT_DIR),$(LOCAL_PATH)/)init.sh:system/etc/init.sh \
     $(if $(wildcard $(PRODUCT_DIR)init.x86.rc),$(PRODUCT_DIR),$(LOCAL_PATH)/)init.x86.rc:root/init.x86.rc \
+    $(if $(wildcard $(PRODUCT_DIR)modules.blacklist),$(PRODUCT_DIR),$(LOCAL_PATH)/)modules.blacklist:system/etc/modules.blacklist \
     $(if $(wildcard $(PRODUCT_DIR)init.$(TARGET_PRODUCT).rc),$(PRODUCT_DIR)init.$(TARGET_PRODUCT).rc:root/init.$(TARGET_PRODUCT).rc) \
     $(if $(wildcard $(PRODUCT_DIR)wpa_supplicant.conf),$(PRODUCT_DIR),$(LOCAL_PATH)/)wpa_supplicant.conf:system/etc/wifi/wpa_supplicant.conf \
     $(if $(wildcard $(PRODUCT_DIR)excluded-input-devices.xml),$(PRODUCT_DIR),$(LOCAL_PATH)/)excluded-input-devices.xml:system/etc/excluded-input-devices.xml \
     $(if $(wildcard $(PRODUCT_DIR)ueventd.$(TARGET_PRODUCT).rc),$(PRODUCT_DIR)ueventd.$(TARGET_PRODUCT).rc,$(LOCAL_PATH)/ueventd.x86.rc):root/ueventd.$(TARGET_PRODUCT).rc \
 
 PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/ppp/ip-up:system/etc/ppp/ip-up \
+    $(LOCAL_PATH)/ppp/ip-down:system/etc/ppp/ip-down \
+    $(LOCAL_PATH)/ppp/peers/gprs:system/etc/ppp/peers/gprs \
     device/sample/etc/apns-full-conf.xml:system/etc/apns-conf.xml \
     development/tools/emulator/system/camera/media_codecs.xml:system/etc/media_codecs.xml \
     development/tools/emulator/system/camera/media_profiles.xml:system/etc/media_profiles.xml \
     frameworks/native/data/etc/tablet_core_hardware.xml:system/etc/permissions/tablet_core_hardware.xml \
     frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
     frameworks/native/data/etc/android.hardware.camera.front.xml:system/etc/permissions/android.hardware.camera.front.xml \
+    frameworks/native/data/etc/android.hardware.camera.xml:system/etc/permissions/android.hardware.camera.xml \
     frameworks/native/data/etc/android.hardware.location.gps.xml:system/etc/permissions/android.hardware.location.gps.xml \
     frameworks/native/data/etc/android.hardware.wifi.xml:system/etc/permissions/android.hardware.wifi.xml \
     frameworks/native/data/etc/android.hardware.sensor.proximity.xml:system/etc/permissions/android.hardware.sensor.proximity.xml \
@@ -79,6 +84,9 @@ $(call inherit-product-if-exists,device/common/gps/gps_as.mk)
 
 # Get the hardware acceleration libraries
 $(call inherit-product-if-exists,$(LOCAL_PATH)/gpu/gpu_mesa.mk)
+
+# Get the sensors hals
+$(call inherit-product-if-exists,hardware/libsensors/sensors.mk)
 
 # Get tablet dalvik parameters
 $(call inherit-product,frameworks/native/build/tablet-7in-hdpi-1024-dalvik-heap.mk)

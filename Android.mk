@@ -26,3 +26,5 @@ ALL_DEFAULT_INSTALLED_MODULES += $$(LOCAL_INSTALLED_MODULE)
 endef
 
 $(foreach a,$(LOCAL_APPS),$(eval $(call include-app,$(a))))
+
+include $(call all-makefiles-under,$(LOCAL_PATH)/..)
