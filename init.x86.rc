@@ -5,6 +5,7 @@ on early-init
     write /sys/module/xt_qtaguid/parameters/ctrl_write_limited N
 
     export force_s3tc_enable true
+#   export EGL_DRIVERS egl_dri2
 
 on init
     mkdir /mnt/shell/emulated 0700 shell shell
@@ -32,6 +33,8 @@ on init
     setprop ro.product.manufacturer $[/sys/class/dmi/id/sys_vendor]
     setprop ro.product.model $[/sys/class/dmi/id/product_name]
 
+    exec /system/bin/logwrapper /system/bin/sh /system/etc/init.sh
+
 on post-fs-data
     mkdir /data/media 0770 media_rw media_rw
 
@@ -44,7 +47,7 @@ on post-fs-data
     setprop vold.post_fs_data_done 1
 
 on early-boot
-    exec /system/bin/logwrapper /system/bin/sh /system/etc/init.sh
+    readprops /x86.prop
 
 on boot
     setprop ro.radio.use-ppp yes
@@ -53,12 +56,6 @@ on boot
     setprop status.battery.level 5
     setprop status.battery.level_raw  50
     setprop status.battery.level_scale 9
-    setprop alsa.mixer.playback.master Master
-    setprop alsa.mixer.capture.master Capture
-    setprop alsa.mixer.playback.earpiece Master
-    setprop alsa.mixer.capture.earpiece Capture
-    setprop alsa.mixer.playback.headset Master
-    setprop alsa.mixer.playback.speaker Master
 
     # merge from system.prop
     setprop ro.config.sync yes
@@ -96,6 +93,10 @@ service iprenew_eth0 /system/bin/dhcpcd -n
     disabled
     oneshot
 
+service enable_houdini /system/bin/enable_houdini
+    class main
+    oneshot
+
 service powerbtnd /system/bin/powerbtnd
     class late_start
 
@@ -106,6 +107,8 @@ service logcat /system/bin/logcat -v threadtime -f /data/log.txt
     class debug
 
 on property:system_init.startsurfaceflinger=0
+    # disable cursor blinking
+    write /dev/tty0 "[?17;0;0c"
     start surfaceflinger
     stop console
 

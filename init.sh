@@ -4,9 +4,10 @@
 # License: GNU Public License v2 or later
 #
 
-function set_hal_prop()
+function set_property()
 {
-	[ -z $(getprop hal.$1) ] && setprop hal.$1 $2
+	# this must be run before post-fs stage
+	echo $1=$2 >> /x86.prop
 }
 
 function init_misc()
@@ -18,7 +19,7 @@ function init_misc()
 function init_hal_audio()
 {
 	case "$PRODUCT" in
-		VirtualBox*|QEMU*)
+		VirtualBox*|Bochs*)
 			[ -d /proc/asound/card0 ] || modprobe snd-sb16 isapnp=0 irq=5
 			;;
 		*)
@@ -42,8 +43,15 @@ function init_hal_audio()
 
 function init_hal_bluetooth()
 {
-	# TODO
-	return
+	for r in /sys/class/rfkill/*; do
+		type=$(cat $r/type)
+		[ "$type" = "wlan" -o "$type" = "bluetooth" ] && echo 1 > $r/state
+	done
+
+	# these modules are incompatible with bluedroid
+	rmmod ath3k
+	rmmod btusb
+	rmmod bluetooth
 }
 
 function init_hal_camera()
@@ -55,6 +63,19 @@ function init_hal_gps()
 {
 	# TODO
 	return
+}
+
+function set_drm_mode()
+{
+	case "$PRODUCT" in
+		ET1602*)
+			drm_mode=1366x768
+			;;
+		*)
+			;;
+	esac
+
+	[ -n "$drm_mode" ] && set_property debug.drm.mode.force $drm_mode
 }
 
 function init_uvesafb()
@@ -69,6 +90,9 @@ function init_uvesafb()
 		T91*)
 			UVESA_MODE=${UVESA_MODE:-1024x600}
 			;;
+		VirtualBox*|Bochs*)
+			UVESA_MODE=${UVESA_MODE:-1024x768}
+			;;
 		*)
 			;;
 	esac
@@ -78,21 +102,20 @@ function init_uvesafb()
 
 function init_hal_gralloc()
 {
-	# disable cursor blinking
-	[ "$(getprop system_init.startsurfaceflinger)" = "0" ] && echo -e '\033[?17;0;0c' > /dev/tty0
-
-	case "$(cat /proc/fb)" in
+	case "$(cat /proc/fb | head -1)" in
 		0*inteldrmfb|0*radeondrmfb)
-			set_hal_prop gralloc drm
+			set_property hal.gralloc drm
+			set_drm_mode
+			;;
+		0*svgadrmfb)
 			;;
 		"")
 			init_uvesafb
 			;&
 		0*)
-			setprop debug.egl.hw 0
+			[ "$HWACCEL" = "1" ] || set_property debug.egl.hw 0
 			;;
 	esac
-
 }
 
 function init_hal_hwcomposer()
@@ -119,27 +142,27 @@ function init_hal_sensors()
 {
 	case "$(cat $DMIPATH/uevent)" in
 		*ICONIA*W*)
-			set_hal_prop sensors w500
+			set_property hal.sensors w500
 			;;
 		*S10-3t*)
-			set_hal_prop sensors s103t
+			set_property hal.sensors s103t
 			;;
 		*Inagua*)
 			#setkeycodes 0x62 29
 			#setkeycodes 0x74 56
-			set_hal_prop sensors kbd
-			set_hal_prop sensors.kbd.type 2
+			set_property hal.sensors kbd
+			set_property hal.sensors.kbd.type 2
 			;;
-		*TEGA*|*Intel*)
-			set_hal_prop sensors kbd
-			set_hal_prop sensors.kbd.type 1
+		*TEGA*|*2010:svnIntel:*)
+			set_property hal.sensors kbd
+			set_property hal.sensors.kbd.type 1
 			io_switch 0x0 0x1
 			setkeycodes 0x6d 125
 			;;
 		*MS-N0E1*)
 			;;
 		*)
-			set_hal_prop sensors kbd
+			set_property hal.sensors kbd
 			;;
 	esac
 }
@@ -148,8 +171,8 @@ function init_ril()
 {
 	case "$PRODUCT" in
 		TEGA*|Intel*)
-			setprop rild.libpath /system/lib/libreference-ril.so
-			setprop rild.libargs "-d /dev/ttyUSB2"
+			set_property rild.libpath /system/lib/libreference-ril.so
+			set_property rild.libargs "-d /dev/ttyUSB2"
 			;;
 		*)
 			;;
@@ -169,12 +192,20 @@ function do_init()
 	init_hal_power
 	init_hal_sensors
 	init_ril
+	chmod 640 /x86.prop
 	post_init
 }
 
 function do_netconsole()
 {
 	modprobe netconsole netconsole="@/,@$(getprop dhcp.eth0.gateway)/"
+}
+
+function do_bootcomplete()
+{
+	for bt in $(lsusb -v | awk ' /Class:.E0/ { print $9 } '); do
+		chown 1002.1002 $bt && chmod 660 $bt
+	done
 }
 
 PATH=/system/bin:/system/xbin
@@ -205,10 +236,11 @@ case "$1" in
 		[ -n "$DEBUG" ] && do_netconsole
 		;;
 	bootcomplete)
-		echo bootcomplete # for debugging
+		do_bootcomplete
 		;;
 	init|"")
 		do_init
-		return 0
 		;;
 esac
+
+return 0

@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2012 The Android-x86 Open Source Project
+# Copyright (C) 2012-2013 The Android-x86 Open Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,8 +17,21 @@
 # This is a generic product that isn't specialized for a specific device.
 # It includes the base Android-x86 platform.
 
-$(call inherit-product,$(SRC_TARGET_DIR)/product/full_base.mk)
-$(call inherit-product,$(SRC_TARGET_DIR)/product/telephony.mk)
+# Additional settings used in all AOSP builds
+PRODUCT_PROPERTY_OVERRIDES := \
+    ro.com.android.dateformat=MM-dd-yyyy \
+
+# Put en_US first in the list, so make it default.
+#PRODUCT_LOCALES := en_US
+
+# Get a list of languages.
+$(call inherit-product,$(SRC_TARGET_DIR)/product/locales_full.mk)
+
+# Get everything else from the parent package
+$(call inherit-product,$(SRC_TARGET_DIR)/product/generic.mk)
+
+# Get some sounds
+$(call inherit-product-if-exists,frameworks/base/data/sounds/OriginalAudio.mk)
 
 $(call inherit-product,$(LOCAL_PATH)/device.mk)
 $(call inherit-product,$(LOCAL_PATH)/packages.mk)

@@ -19,25 +19,18 @@
 PRODUCT_PACKAGES := \
     BasicSmsReceiver \
     Development \
-    DevelopmentSettings \
     Galaxy4 \
     GlobalTime \
     HoloSpiralWallpaper \
     LiveWallpapers \
     LiveWallpapersPicker \
     MagicSmokeWallpapers \
-    NoiseField \
     NotePad \
     PhaseBeam \
     Provision \
     RSSReader \
-    SpeechRecorder \
-    SoundRecorder \
-    Stk \
-    VideoEditor \
     VisualizationWallpapers \
-    VoiceDialer \
-    camera.default \
+    camera.x86 \
     chat \
     com.android.future.usb.accessory \
     drmserver \
@@ -51,7 +44,6 @@ PRODUCT_PACKAGES := \
     make_ext4fs \
     powerbtnd \
     su \
-    v86d \
 
 PRODUCT_PACKAGES += \
     badblocks \

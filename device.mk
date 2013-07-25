@@ -39,9 +39,8 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/ppp/ip-up:system/etc/ppp/ip-up \
     $(LOCAL_PATH)/ppp/ip-down:system/etc/ppp/ip-down \
     $(LOCAL_PATH)/ppp/peers/gprs:system/etc/ppp/peers/gprs \
-    device/sample/etc/apns-full-conf.xml:system/etc/apns-conf.xml \
-    development/tools/emulator/system/camera/media_codecs.xml:system/etc/media_codecs.xml \
-    development/tools/emulator/system/camera/media_profiles.xml:system/etc/media_profiles.xml \
+    $(LOCAL_PATH)/media_codecs.xml:system/etc/media_codecs.xml \
+    $(LOCAL_PATH)/media_profiles.xml:system/etc/media_profiles.xml \
     frameworks/native/data/etc/tablet_core_hardware.xml:system/etc/permissions/tablet_core_hardware.xml \
     frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
     frameworks/native/data/etc/android.hardware.camera.front.xml:system/etc/permissions/android.hardware.camera.front.xml \
@@ -95,4 +94,4 @@ $(call inherit-product,frameworks/native/build/tablet-7in-hdpi-1024-dalvik-heap.
 $(call inherit-product-if-exists,vendor/google/products/gms.mk)
 
 # Get Arm translator
-$(call inherit-product-if-exists,vendor/intel/libhoudini.mk)
+$(call inherit-product-if-exists,vendor/intel/houdini.mk)

@@ -8,23 +8,4 @@
 #      http://www.apache.org/licenses/LICENSE-2.0
 #
 
-LOCAL_PATH := $(call my-dir)/app
-LOCAL_APPS := $(subst $(LOCAL_PATH)/,,$(wildcard $(LOCAL_PATH)/*$(COMMON_ANDROID_PACKAGE_SUFFIX)))
-
-define include-app
-include $(CLEAR_VARS)
-
-LOCAL_MODULE := $$(basename $(1))
-LOCAL_MODULE_TAGS := optional
-LOCAL_MODULE_SUFFIX := $$(suffix $(1))
-LOCAL_SRC_FILES := $(1)
-LOCAL_MODULE_CLASS := APPS
-LOCAL_CERTIFICATE := PRESIGNED
-include $$(BUILD_PREBUILT)
-
-ALL_DEFAULT_INSTALLED_MODULES += $$(LOCAL_INSTALLED_MODULE)
-endef
-
-$(foreach a,$(LOCAL_APPS),$(eval $(call include-app,$(a))))
-
-include $(call all-makefiles-under,$(LOCAL_PATH)/..)
+include $(call all-subdir-makefiles)
