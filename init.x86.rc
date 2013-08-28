@@ -62,6 +62,9 @@ on boot
     setprop app.setupwizard.disable 0
     setprop ro.alarm.volume.adjustable true
     setprop ro.simulated.phone false
+    # disable red frame boarder in eng build
+    setprop persist.sys.strictmode.visual 0
+    setprop persist.sys.strictmode.disable 1
 
 on fs
     setprop ro.crypto.fuse_sdcard true
