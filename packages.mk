@@ -39,7 +39,9 @@ PRODUCT_PACKAGES := \
     hwcomposer.x86 \
     icu.dat \
     io_switch \
-    libdrmframework_jni \
+    libFFmpegExtractor \
+    libstagefright_soft_ffmpegadec \
+    libstagefright_soft_ffmpegvdec \
     lights.default \
     make_ext4fs \
     powerbtnd \
