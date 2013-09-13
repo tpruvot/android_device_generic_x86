@@ -71,7 +71,7 @@ on fs
     # manually start class late_start since we don't use mount_all
     class_start late_start
 
-service wpa_supplicant /system/bin/wpa_supplicant -d -c/data/misc/wifi/wpa_supplicant.conf
+service wpa_supplicant /system/bin/wpa_supplicant -c/data/misc/wifi/wpa_supplicant.conf
     class main
     disabled
     oneshot
