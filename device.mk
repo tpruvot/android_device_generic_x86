@@ -89,7 +89,7 @@ $(call inherit-product-if-exists,$(LOCAL_PATH)/gpu/gpu_mesa.mk)
 $(call inherit-product-if-exists,hardware/libsensors/sensors.mk)
 
 # Get tablet dalvik parameters
-$(call inherit-product,frameworks/native/build/tablet-7in-hdpi-1024-dalvik-heap.mk)
+$(call inherit-product,frameworks/native/build/tablet-10in-xhdpi-2048-dalvik-heap.mk)
 
 # Get GMS
 $(call inherit-product-if-exists,vendor/google/products/gms.mk)
