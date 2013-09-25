@@ -203,6 +203,8 @@ function do_netconsole()
 
 function do_bootcomplete()
 {
+	[ -z "$(getprop persist.sys.root_access)" ] && setprop persist.sys.root_access 3
+
 	for bt in $(lsusb -v | awk ' /Class:.E0/ { print $9 } '); do
 		chown 1002.1002 $bt && chmod 660 $bt
 	done

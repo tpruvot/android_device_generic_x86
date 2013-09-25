@@ -59,4 +59,3 @@ PRODUCT_PACKAGES += \
     AndroidTerm \
     FileManager \
     LIME \
-    Superuser \
