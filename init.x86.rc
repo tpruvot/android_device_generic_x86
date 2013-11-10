@@ -67,6 +67,8 @@ on boot
     # disable red frame boarder in eng build
     setprop persist.sys.strictmode.visual 0
     setprop persist.sys.strictmode.disable 1
+    # workaround for h.265 slowness
+    setprop sys.media.vdec.drop 0
 
 on fs
     setprop ro.crypto.fuse_sdcard true
