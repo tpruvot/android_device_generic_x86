@@ -249,7 +249,7 @@ on post-fs-data
     mkdir /data/mediadrm 0770 mediadrm mediadrm
 
     # symlink to bugreport storage location
-    symlink /data/data/com.android.shell/files/bugreports /data/bugreports
+    symlink data/com.android.shell/files/bugreports /data/bugreports
 
     # Separate location for storing security policy files on data
     mkdir /data/security 0711 system system
