@@ -159,6 +159,12 @@ function init_hal_sensors()
 			io_switch 0x0 0x1
 			setkeycodes 0x6d 125
 			;;
+		*tx2*)
+			setkeycode 0xb1 138
+			setkeycode 0x8a 152
+			set_property hal.sensors kbd
+			set_property hal.sensors.kbd.type 6
+			;;
 		*MS-N0E1*)
 			;;
 		*)
