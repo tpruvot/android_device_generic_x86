@@ -14,11 +14,16 @@ on early-init
 on init
     mkdir /mnt/shell/emulated 0700 shell shell
     mkdir /storage/emulated 0555 root root
-    mkdir /storage/usb0 0000 system sdcard_rw
-    mkdir /storage/usb1 0000 system sdcard_rw
-    mkdir /storage/usb2 0000 system sdcard_rw
-    mkdir /storage/usb3 0000 system sdcard_rw
-    mkdir /storage/sdcard1 0000 system sdcard_rw
+    mkdir /mnt/media_rw/usb0 0700 media_rw media_rw
+    mkdir /storage/usb0 0700 root root
+    mkdir /mnt/media_rw/usb1 0700 media_rw media_rw
+    mkdir /storage/usb1 0700 root root
+    mkdir /mnt/media_rw/usb2 0700 media_rw media_rw
+    mkdir /storage/usb2 0700 root root
+    mkdir /mnt/media_rw/usb3 0700 media_rw media_rw
+    mkdir /storage/usb3 0700 root root
+    mkdir /mnt/media_rw/sdcard1 0700 media_rw media_rw
+    mkdir /storage/sdcard1 0700 root root
 
     export EXTERNAL_STORAGE /storage/emulated/legacy
     export EMULATED_STORAGE_SOURCE /mnt/shell/emulated
@@ -43,10 +48,11 @@ on init
 on post-fs-data
     mkdir /data/media 0770 media_rw media_rw
 
+    mkdir /data/misc/wifi 0770 wifi wifi
     mkdir /data/misc/wifi/sockets 0770 wifi wifi
-    mkdir /data/system 0771 system system
-    mkdir /data/system/wpa_supplicant 0771 wifi wifi
+    mkdir /data/misc/wifi/wpa_supplicant 0770 wifi wifi
     mkdir /data/misc/dhcp 0770 dhcp dhcp
+    mkdir /data/system 0775 system system
 
     # Set indication (checked by vold) that we have finished this action
     setprop vold.post_fs_data_done 1
@@ -78,12 +84,19 @@ on fs
     # manually start class late_start since we don't use mount_all
     class_start late_start
 
-service wpa_supplicant /system/bin/wpa_supplicant -c/data/misc/wifi/wpa_supplicant.conf
+service wpa_supplicant /system/bin/wpa_supplicant -c/data/misc/wifi/wpa_supplicant.conf \
+    -O/data/misc/wifi/sockets \
+    -e/data/misc/wifi/entropy.bin -g@android:wpa_wlan0
+    #   we will start as root and wpa_supplicant will switch to user wifi
+    #   after setting up the capabilities required for WEXT
+    #   user wifi
+    #   group wifi inet keystore
     class main
+    socket wpa_wlan0 dgram 660 wifi wifi
     disabled
     oneshot
 
-service dhcpcd_wlan0 /system/bin/dhcpcd -ABDKL
+service dhcpcd_wlan0 /system/bin/dhcpcd -aABDKL
     class main
     disabled
     oneshot
@@ -110,11 +123,36 @@ service enable_houdini /system/bin/enable_houdini
 service powerbtnd /system/bin/powerbtnd
     class late_start
 
-service sdcard /system/bin/sdcard /data/media /mnt/shell/emulated 1023 1023
+service sdcard /system/bin/sdcard -u 1023 -g 1023 -l /data/media /mnt/shell/emulated
     class late_start
+
+service fuse_sdcard1 /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw/sdcard1 /storage/sdcard1
+    class late_start
+    disabled
+
+service fuse_usb0 /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw/usb0 /storage/usb0
+    class late_start
+    disabled
+
+service fuse_usb1 /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw/usb1 /storage/usb1
+    class late_start
+    disabled
+
+service fuse_usb2 /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw/usb2 /storage/usb2
+    class late_start
+    disabled
+
+service fuse_usb3 /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw/usb3 /storage/usb3
+    class late_start
+    disabled
 
 service logcat /system/bin/logcat -v threadtime -f /data/log.txt
     class debug
+
+service wacom-input /system/bin/wacom-input
+    class late_start
+    disabled
+    oneshot
 
 on property:init.svc.wpa_supplicant=stopped
     stop dhcpcd
