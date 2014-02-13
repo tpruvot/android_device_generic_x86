@@ -18,5 +18,5 @@
 -->
 <resources>
     <bool name="def_lockscreen_disabled">false</bool>
-    <integer name="def_screen_off_timeout">1800000</integer>
+    <integer name="def_screen_off_timeout">600000</integer>
 </resources>

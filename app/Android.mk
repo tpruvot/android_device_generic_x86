@@ -26,7 +26,7 @@ LOCAL_LIBS := $$(shell zipinfo -1 $$(LOCAL_PATH)/$(1) | grep ^lib/ | grep -v /$$
 LOCAL_X86_LIBS := $$(filter lib/x86/%,$$(LOCAL_LIBS))
 LOCAL_ARM_LIBS := $$(filter lib/armeabi/%,$$(LOCAL_LIBS))
 LOCAL_ARMV7_LIBS := $$(filter lib/armeabi-v7a/%,$$(LOCAL_LIBS))
-LOCAL_LIBS := $$(if $$(LOCAL_X86_LIBS),$$(LOCAL_X86_LIBS),$$(if $$(LOCAL_ARM_LIBS),$$(LOCAL_ARM_LIBS),$$(LOCAL_ARMV7_LIBS)))
+LOCAL_LIBS := $$(if $$(LOCAL_X86_LIBS),$$(LOCAL_X86_LIBS),$$(if $$(LOCAL_ARMV7_LIBS),$$(LOCAL_ARMV7_LIBS),$$(LOCAL_ARM_LIBS)))
 ifneq ($$(LOCAL_LIBS),)
 INSTALLED_LIBS := $$(addprefix $$(TARGET_OUT_SHARED_LIBRARIES)/$$(if $$(LOCAL_X86_LIBS),,arm/),$$(notdir $$(firstword $$(LOCAL_LIBS))))
 $$(INSTALLED_LIBS): PRIVATE_LIBS := $$(LOCAL_LIBS)

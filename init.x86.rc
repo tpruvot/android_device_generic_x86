@@ -3,24 +3,27 @@ import /init.superuser.rc
 on early-init
     mount debugfs debugfs /sys/kernel/debug
     chmod 755 /sys/kernel/debug
+    write /proc/sys/kernel/ctrl-alt-del 1
 
     write /sys/module/xt_qtaguid/parameters/ctrl_write_limited N
 
     export force_s3tc_enable true
+#   export EGL_LOG_LEVEL info
 #   export EGL_DRIVERS egl_dri2
 
 on init
     mkdir /mnt/shell/emulated 0700 shell shell
     mkdir /storage/emulated 0555 root root
-    mkdir /mnt/USB0 0000 system system
-    mkdir /mnt/USB1 0000 system system
-    mkdir /mnt/USB2 0000 system system
-    mkdir /mnt/USB3 0000 system system
-    mkdir /mnt/sdcard1 0000 system system
+    mkdir /storage/usb0 0000 system sdcard_rw
+    mkdir /storage/usb1 0000 system sdcard_rw
+    mkdir /storage/usb2 0000 system sdcard_rw
+    mkdir /storage/usb3 0000 system sdcard_rw
+    mkdir /storage/sdcard1 0000 system sdcard_rw
 
     export EXTERNAL_STORAGE /storage/emulated/legacy
     export EMULATED_STORAGE_SOURCE /mnt/shell/emulated
     export EMULATED_STORAGE_TARGET /storage/emulated
+    export SECONDARY_STORAGE /storage/usb0:/storage/usb1:/storage/usb2:/storage/usb3:/storage/sdcard1
 
     # Support legacy paths
     symlink /storage/emulated/legacy /sdcard
@@ -113,16 +116,20 @@ service sdcard /system/bin/sdcard /data/media /mnt/shell/emulated 1023 1023
 service logcat /system/bin/logcat -v threadtime -f /data/log.txt
     class debug
 
+on property:init.svc.wpa_supplicant=stopped
+    stop dhcpcd
+
 on property:system_init.startsurfaceflinger=0
     # disable cursor blinking
     write /dev/tty0 "[?17;0;0c"
     start surfaceflinger
     stop console
 
-on property:dev.bootcomplete=1
+on property:sys.boot_completed=1
+    write /proc/sys/kernel/ctrl-alt-del 0
     exec /system/bin/logwrapper /system/bin/sh /system/etc/init.sh bootcomplete
 
-on property:net.dnschange=1
+on property:net.dns1=*
     exec /system/bin/logwrapper /system/bin/sh /system/etc/init.sh netconsole
 
 on debug

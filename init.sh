@@ -141,6 +141,12 @@ function init_hal_power()
 function init_hal_sensors()
 {
 	case "$(cat $DMIPATH/uevent)" in
+		*T*00LA*)
+			set_property hal.sensors intel
+			;;
+		*Lucid-MWE*)
+			set_property ro.ignore_atkbd 1
+			;;
 		*ICONIA*W*)
 			set_property hal.sensors w500
 			;;
@@ -150,10 +156,12 @@ function init_hal_sensors()
 		*Inagua*)
 			#setkeycodes 0x62 29
 			#setkeycodes 0x74 56
+			set_property ro.ignore_atkbd 1
 			set_property hal.sensors kbd
 			set_property hal.sensors.kbd.type 2
 			;;
 		*TEGA*|*2010:svnIntel:*)
+			set_property ro.ignore_atkbd 1
 			set_property hal.sensors kbd
 			set_property hal.sensors.kbd.type 1
 			io_switch 0x0 0x1
@@ -166,6 +174,12 @@ function init_hal_sensors()
 			set_property hal.sensors.kbd.type 6
 			;;
 		*MS-N0E1*)
+			set_property ro.ignore_atkbd 1
+			set_property poweroff.doubleclick 0
+			;;
+		*ThinkPad*Tablet*)
+			set_property hal.sensors hdaps
+			start wacom-input
 			;;
 		*)
 			set_property hal.sensors kbd
@@ -210,6 +224,9 @@ function do_netconsole()
 function do_bootcomplete()
 {
 	[ -z "$(getprop persist.sys.root_access)" ] && setprop persist.sys.root_access 3
+
+	# FIXME: autosleep works better on i965?
+	[ "$(getprop debug.mesa.driver)" = "i965" ] && setprop debug.autosleep 1
 
 	for bt in $(lsusb -v | awk ' /Class:.E0/ { print $9 } '); do
 		chown 1002.1002 $bt && chmod 660 $bt

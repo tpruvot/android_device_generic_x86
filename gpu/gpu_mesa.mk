@@ -13,4 +13,4 @@ PRODUCT_PACKAGES := \
     libGLES_mesa
 
 PRODUCT_PROPERTY_OVERRIDES := \
-    ro.opengles.version = 131072
+    ro.opengles.version = 196608

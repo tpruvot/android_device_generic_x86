@@ -44,8 +44,14 @@ PRODUCT_PACKAGES := \
     libstagefright_soft_ffmpegvdec \
     lights.default \
     make_ext4fs \
+    parted \
     powerbtnd \
+    scp \
+    sftp \
+    ssh \
+    sshd \
     su \
+    wacom-input \
 
 PRODUCT_PACKAGES += \
     badblocks \

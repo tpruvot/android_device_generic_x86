@@ -79,19 +79,6 @@
     <!-- Each camcorder profile defines a set of predefined configuration parameters -->
     <CamcorderProfiles cameraId="0">
 
-        <EncoderProfile quality="high" fileFormat="mp4" duration="60">
-            <Video codec="h264"
-                   bitRate="13000000"
-                   width="1920"
-                   height="1080"
-                   frameRate="30" />
-
-            <Audio codec="aac"
-                   bitRate="12200"
-                   sampleRate="8000"
-                   channels="1" />
-        </EncoderProfile>
-
         <EncoderProfile quality="low" fileFormat="mp4" duration="30">
             <Video codec="h264"
                    bitRate="256000"
@@ -171,32 +158,6 @@
                    channels="1" />
         </EncoderProfile>
 
-        <EncoderProfile quality="1080p" fileFormat="mp4" duration="60">
-            <Video codec="h264"
-                   bitRate="13000000"
-                   width="1920"
-                   height="1080"
-                   frameRate="30" />
-
-            <Audio codec="aac"
-                   bitRate="12200"
-                   sampleRate="8000"
-                   channels="1" />
-        </EncoderProfile>
-
-        <EncoderProfile quality="timelapsehigh" fileFormat="mp4" duration="60">
-            <Video codec="h264"
-                   bitRate="13000000"
-                   width="1920"
-                   height="1080"
-                   frameRate="30" />
-
-            <Audio codec="aac"
-                   bitRate="12200"
-                   sampleRate="8000"
-                   channels="1" />
-        </EncoderProfile>
-
         <EncoderProfile quality="timelapselow" fileFormat="mp4" duration="30">
             <Video codec="h264"
                    bitRate="256000"
@@ -262,20 +223,6 @@
                    sampleRate="8000"
                    channels="1" />
         </EncoderProfile>
-
-        <EncoderProfile quality="timelapse1080p" fileFormat="mp4" duration="60">
-            <Video codec="h264"
-                   bitRate="13000000"
-                   width="1920"
-                   height="1080"
-                   frameRate="30" />
-
-            <Audio codec="aac"
-                   bitRate="12200"
-                   sampleRate="8000"
-                   channels="1" />
-        </EncoderProfile>
-
 
         <ImageEncoding quality="90" />
         <ImageEncoding quality="80" />
