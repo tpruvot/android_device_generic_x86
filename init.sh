@@ -172,6 +172,8 @@ function init_hal_sensors()
 			setkeycodes 0x8a 152
 			set_property hal.sensors kbd
 			set_property hal.sensors.kbd.type 6
+			set_property poweroff.doubleclick 0
+			set_property qemu.hw.mainkeys 1
 			;;
 		*MS-N0E1*)
 			set_property ro.ignore_atkbd 1
