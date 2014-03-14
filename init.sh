@@ -14,6 +14,9 @@ function init_misc()
 {
 	# a hack for USB modem
 	lsusb | grep 1a8d:1000 && eject
+
+	# in case no cpu governor driver autoloads
+	[ -d /sys/devices/system/cpu/cpu0/cpufreq ] || modprobe acpi-cpufreq
 }
 
 function init_hal_audio()
@@ -201,6 +204,17 @@ function init_ril()
 	esac
 }
 
+function init_cpu_governor()
+{
+	governor=$(getprop cpu.governor)
+
+	[ $governor ] && {
+		for cpu in $(ls -d /sys/devices/system/cpu/cpu?); do
+			echo $governor > $cpu/cpufreq/scaling_governor || return 1
+		done
+	}
+}
+
 function do_init()
 {
 	init_misc
@@ -225,6 +239,8 @@ function do_netconsole()
 
 function do_bootcomplete()
 {
+	init_cpu_governor
+
 	[ -z "$(getprop persist.sys.root_access)" ] && setprop persist.sys.root_access 3
 
 	# FIXME: autosleep works better on i965?
