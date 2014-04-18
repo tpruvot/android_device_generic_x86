@@ -58,6 +58,10 @@ PRODUCT_PACKAGES += \
     badblocks \
     e2fsck \
     mke2fs \
+    mkntfs \
+    mount.exfat \
+    ntfs-3g \
+    ntfsfix \
     resize2fs \
     tune2fs \
 
