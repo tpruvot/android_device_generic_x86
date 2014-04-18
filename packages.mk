@@ -30,6 +30,7 @@ PRODUCT_PACKAGES := \
     PhaseBeam \
     Provision \
     RSSReader \
+    Trebuchet \
     VisualizationWallpapers \
     camera.x86 \
     chat \
