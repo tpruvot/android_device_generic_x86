@@ -40,7 +40,8 @@ function init_hal_audio()
 		alsa_amixer -c $c set Capture 100
 		alsa_amixer -c $c set Capture cap
 		alsa_amixer -c $c set PCM 100 unmute
-		alsa_amixer -c $c set 'Mic Boost' 2
+		alsa_amixer -c $c set 'Mic Boost' 3
+		alsa_amixer -c $c set 'Internal Mic Boost' 3
 	done
 }
 
@@ -145,10 +146,21 @@ function init_hal_sensors()
 {
 	case "$(cat $DMIPATH/uevent)" in
 		*T*00LA*)
-			set_property hal.sensors intel
+			modprobe kfifo-buf
+			modprobe industrialio-triggered-buffer
+			modprobe hid-sensor-hub
+			modprobe hid-sensor-iio-common
+			modprobe hid-sensor-trigger
+			modprobe hid-sensor-accel-3d
+			modprobe hid-sensor-gyro-3d
+			modprobe hid-sensor-als
+			modprobe hid-sensor-magn-3d
+			sleep 1; busybox chown -R 1000.1000 /sys/bus/iio/devices/iio:device?/
+			set_property hal.sensors hsb
 			;;
 		*Lucid-MWE*)
 			set_property ro.ignore_atkbd 1
+			set_property hal.sensors hdaps
 			;;
 		*ICONIA*W*)
 			set_property hal.sensors w500
@@ -192,6 +204,23 @@ function init_hal_sensors()
 	esac
 }
 
+function init_tscal()
+{
+	case "$PRODUCT" in
+		T91|T101|ET2002|74499FU)
+			if [ ! -e /data/misc/tscal/pointercal ]; then
+				mkdir -p /data/misc/tscal
+				touch /data/misc/tscal/pointercal
+				chown 1000.1000 /data/misc/tscal /data/misc/tscal/*
+				chmod 775 /data/misc/tscal
+				chmod 664 /data/misc/tscal/pointercal
+			fi
+			;;
+		*)
+			;;
+	esac
+}
+
 function init_ril()
 {
 	case "$PRODUCT" in
@@ -227,6 +256,7 @@ function do_init()
 	init_hal_lights
 	init_hal_power
 	init_hal_sensors
+	init_tscal
 	init_ril
 	chmod 640 /x86.prop
 	post_init

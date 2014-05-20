@@ -22,15 +22,14 @@ PRODUCT_PACKAGES := \
     Galaxy4 \
     GlobalTime \
     HoloSpiralWallpaper \
-    Launcher3 \
     LiveWallpapers \
     LiveWallpapersPicker \
     MagicSmokeWallpapers \
     NotePad \
     PhaseBeam \
+    PinyinIME \
     Provision \
     RSSReader \
-    Trebuchet \
     VisualizationWallpapers \
     camera.x86 \
     chat \
@@ -49,6 +48,7 @@ PRODUCT_PACKAGES := \
     parted \
     powerbtnd \
     scp \
+    sensors.hsb \
     sftp \
     ssh \
     sshd \
@@ -68,6 +68,7 @@ PRODUCT_PACKAGES += \
 
 # Third party apps
 PRODUCT_PACKAGES += \
-    AndroidTerm \
-    FileManager \
-    LIME \
+    CMFileManager \
+    Superuser \
+    TSCalibration2 \
+    Trebuchet \

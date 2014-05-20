@@ -38,6 +38,7 @@ TARGET_NO_KERNEL ?= false
 TARGET_NO_RECOVERY ?= true
 TARGET_PROVIDES_INIT_RC ?= true
 TARGET_CPU_SMP ?= true
+TARGET_EXTRA_KERNEL_MODULES := 8723au
 
 TARGET_USE_DISKINSTALLER ?= false
 
@@ -81,6 +82,3 @@ BOARD_EGL_CFG ?= device/generic/x86/gpu/egl_mesa.cfg
 endif
 
 BOARD_KERNEL_CMDLINE := root=/dev/ram0 androidboot.hardware=$(TARGET_PRODUCT) video=-16
-
-SUPERUSER_EMBEDDED := true
-SUPERUSER_PACKAGE_PREFIX := com.android.settings.cyanogenmod.superuser

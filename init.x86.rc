@@ -46,6 +46,8 @@ on init
     exec /system/bin/logwrapper /system/bin/sh /system/etc/init.sh
 
 on post-fs-data
+    sysclktz 1
+
     mkdir /data/media 0770 media_rw media_rw
 
     mkdir /data/misc/wifi 0770 wifi wifi
