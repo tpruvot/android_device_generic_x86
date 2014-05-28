@@ -162,7 +162,7 @@ function init_hal_sensors()
 			set_property ro.ignore_atkbd 1
 			set_property hal.sensors hdaps
 			;;
-		*ICONIA*W*)
+		*ICONIA*W5*)
 			set_property hal.sensors w500
 			;;
 		*S10-3t*)
@@ -207,7 +207,7 @@ function init_hal_sensors()
 function init_tscal()
 {
 	case "$PRODUCT" in
-		T91|T101|ET2002|74499FU)
+		T91|T101|ET2002|74499FU|945GSE-ITE8712)
 			if [ ! -e /data/misc/tscal/pointercal ]; then
 				mkdir -p /data/misc/tscal
 				touch /data/misc/tscal/pointercal
