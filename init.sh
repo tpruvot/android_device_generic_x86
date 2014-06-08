@@ -194,6 +194,11 @@ function init_hal_sensors()
 			set_property ro.ignore_atkbd 1
 			set_property poweroff.doubleclick 0
 			;;
+		*Aspire1*25*)
+			modprobe lis3lv02d_i2c
+			set_property hal.sensors hdaps
+			echo -n "enabled" > /sys/class/thermal/thermal_zone0/mode
+			;;
 		*ThinkPad*Tablet*)
 			set_property hal.sensors hdaps
 			start wacom-input
