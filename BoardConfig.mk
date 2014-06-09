@@ -82,3 +82,5 @@ BOARD_EGL_CFG ?= device/generic/x86/gpu/egl_mesa.cfg
 endif
 
 BOARD_KERNEL_CMDLINE := root=/dev/ram0 androidboot.hardware=$(TARGET_PRODUCT) video=-16
+
+BOARD_KERNEL_CMDLINE += selinux=1 enforcing=0 androidboot.selinux=permissive
