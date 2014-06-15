@@ -197,6 +197,10 @@ function init_hal_sensors()
 		*Aspire1*25*)
 			modprobe lis3lv02d_i2c
 			set_property hal.sensors hdaps
+			setkeycodes 0xe062 152 # on-screen P button -> sleep
+			setkeycodes 0xe070 29  # on-keyboard big button
+			setkeycodes 0xe001 125 # Laptop mode switch
+			setkeycodes 0xe039 56  # Tablet mode switch
 			echo -n "enabled" > /sys/class/thermal/thermal_zone0/mode
 			;;
 		*ThinkPad*Tablet*)
